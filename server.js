@@ -2,14 +2,18 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'data', 'students.json');
-const CLASSES_FILE = path.join(__dirname, 'data', 'classes.json');
-const GRADES_FILE = path.join(__dirname, 'data', 'grades.json');
-const FILTERS_FILE = path.join(__dirname, 'data', 'filters.json');
+// 数据目录：fnOS 下使用应用数据目录 / 共享目录，本地运行时回退到项目根
+const DATA_ROOT = process.env.APP_DATA_DIR || process.env.TRIM_PKGVAR || __dirname;
+
+// 端口：优先读取 fnOS 注入的 TRIM_SERVICE_PORT，其次 PORT，默认 3000
+const PORT = Number(process.env.TRIM_SERVICE_PORT || process.env.PORT || 3000);
+const DATA_FILE = path.join(DATA_ROOT, 'data', 'students.json');
+const CLASSES_FILE = path.join(DATA_ROOT, 'data', 'classes.json');
+const GRADES_FILE = path.join(DATA_ROOT, 'data', 'grades.json');
+const FILTERS_FILE = path.join(DATA_ROOT, 'data', 'filters.json');
 
 // 确保数据目录存在
-const dataDir = path.join(__dirname, 'data');
+const dataDir = path.join(DATA_ROOT, 'data');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
